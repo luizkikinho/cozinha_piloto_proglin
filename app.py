@@ -10,20 +10,8 @@ from logica import (
 from gerador_problema import (
     obter_problema_fixo, 
     gerar_problema_aleatorio, 
-    gerar_solucao_inicialimport streamlit as st
-import pandas as pd
+    gerar_solucao_inicial)
 
-from logica import (
-    subida_encosta,
-    subida_encosta_tentativas,
-    tempera_simulada
-)
-
-from gerador_problema import (
-    obter_problema_fixo,
-    gerar_problema_aleatorio,
-    gerar_solucao_inicial
-)
 
 from avalia_sucessor import avalia_rota
 
