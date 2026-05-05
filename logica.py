@@ -32,8 +32,6 @@ def subida_encosta_tentativas(rota_inicial, matriz, tmax):
             t = t + 1    
     return atual, va
 
-from avalia_sucessor import avalia_rota, sucessor
-
 def tempera_simulada(rota_inicial, matriz, ti, tf, fr):
     atual = rota_inicial
     va = avalia_rota(atual, matriz)
