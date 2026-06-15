@@ -15,6 +15,7 @@ from gerador_problema import (
 
 from avalia_sucessor import avalia_rota
 from analise_comparativa import executar_analise
+from ag import algoritmo_genetico
 
 # =========================================================
 # CONFIGURAÇÃO DA PÁGINA
@@ -274,7 +275,56 @@ if menu == "Métodos Básicos":
 # =========================================================
 elif menu == "Algoritmos Genéticos":
     st.markdown("<div class='m3-headline'>Algoritmos Genéticos</div>", unsafe_allow_html=True)
-    st.info("Módulo em desenvolvimento.")
+    st.markdown("<div class='m3-body' style='margin-bottom: 2rem;'>Evolução de uma população de rotas utilizando seleção por roleta, cruzamento de ordem (OX) e mutação por troca.</div>", unsafe_allow_html=True)
+
+    # Verifica se o usuário já gerou a matriz de escolas na primeira aba
+    if st.session_state.matriz is None:
+        st.warning("É necessário ir na aba 'Métodos Básicos' e clicar em 'Gerar Problema' primeiro.")
+    else:
+        st.markdown("<div class='m3-title'>Hiperparâmetros do Algoritmo Genético</div>", unsafe_allow_html=True)
+        
+        # Cria duas colunas para organizar os sliders e inputs numéricos
+        col_params1, col_params2 = st.columns(2)
+        
+        with col_params1:
+            tp = st.number_input("Tamanho da População (TP)", min_value=4, value=50, step=2, help="Quantidade de rotas simultâneas por geração.")
+            ng = st.number_input("Número de Gerações (NG)", min_value=1, value=100, step=10, help="Quantidade de iterações do ciclo evolutivo.")
+        
+        with col_params2:
+            tc = st.slider("Taxa de Cruzamento (TC)", min_value=0.0, max_value=1.0, value=0.8, step=0.05, help="Probabilidade de dois pais misturarem suas rotas.")
+            tm = st.slider("Taxa de Mutação (TM)", min_value=0.0, max_value=1.0, value=0.05, step=0.01, help="Probabilidade de uma rota filha inverter posições aleatoriamente.")
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # Botão de execução
+        if st.button("Executar AG", type="primary"):
+            with st.spinner("Evoluindo a população de rotas..."):
+                escolas_qtd = len(st.session_state.escolas)
+                matriz = st.session_state.matriz
+                
+                # Executa o algoritmo genético do arquivo ag.py
+                melhor_rota, melhor_custo = algoritmo_genetico(escolas_qtd, matriz, tp, ng, tc, tm)
+            
+            # Exibe o resultado final na tela
+            st.markdown("<div class='m3-title' style='margin-top: 1.5rem;'>Resultado da Evolução</div>", unsafe_allow_html=True)
+            col_res1, col_res2 = st.columns([1, 3])
+            
+            col_res1.metric("Melhor Custo Encontrado", f"{melhor_custo:.2f}")
+            
+            rota_numerica = " ➔ ".join([str(i) for i in melhor_rota])
+            rota_nomes = nomes_da_rota(melhor_rota, st.session_state.escolas)
+
+            html_rota = f"""
+            <div class='m3-route-box' style='margin-top: 0;'>
+                <span style='color: #D0BCFF; font-weight: bold;'>Sequência Numérica:</span><br>
+                {rota_numerica}
+                <br><br>
+                <span style='color: #D0BCFF; font-weight: bold;'>Locais:</span><br>
+                {rota_nomes}
+            </div>
+            """
+
+            col_res2.markdown(html_rota, unsafe_allow_html=True)
 
 # =========================================================
 # INTERFACE: SOBRE
