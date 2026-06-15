@@ -1,140 +1,53 @@
-# Projeto: Otimização de Rotas — Cozinha Piloto
+PROJETO: OTIMIZAÇÃO DE ROTAS - COZINHA PILOTO
 
-**Discentes:** Luiz Francisco Charleaux e Caetano  
-**Problema tratado:** Aplicação do Algoritmo do Caixeiro Viajante (TSP) para otimização das rotas de entrega de alimentos da Cozinha Piloto de Cachoeira Paulista.
+Discente: Luiz Francisco Charleaux e Caetano
+Problema Tratado: Aplicação do Algoritmo do Caixeiro Viajante (TSP)
+para otimização das rotas de entrega de alimentos da Cozinha Piloto
+de Cachoeira Paulista.
 
-## Descrição do Projeto
+O projeto foi desenvolvido em Python utilizando a biblioteca Streamlit
+para a interface gráfica, seguindo o princípio de separação de
+responsabilidades (Modularização).
 
-O projeto foi desenvolvido em **Python**, utilizando a biblioteca **Streamlit** para a interface gráfica, seguindo o princípio de separação de responsabilidades por meio da **modularização**.
+O código-fonte está dividido em 6 arquivos principais:
 
-O código-fonte está dividido em **5 arquivos principais**:
+1. app.py: Arquivo principal que gerencia a interface web, a navegação do topo (abas) e a interação com o usuário.
+2. gerador_problema.py: Responsável por criar a matriz de distâncias (fixa ou aleatória) e gerar a solução inicial.
+3. avalia_sucessor.py: Contém a função de avaliação de custo da rota e o motor de geração de vizinhos.
+4. logica.py: Contém a implementação matemática dos algoritmos heurísticos de busca local (Subida de Encosta Clássica, Subida de Encosta com Tentativas e Têmpera Simulada).
+5. analise_comparativa.py: Motor de automação que executa múltiplas baterias de testes com os algoritmos e gera os dados da "Tabela 1".
+6. ag.py: Módulo responsável pela implementação do Algoritmo Genético, contendo a lógica de aptidão (Fitness), seleção por roleta, cruzamento de ordem (OX) e mutação (Swap).
 
-1. **`app.py`**  
-   Arquivo principal que gerencia a interface web, os menus e a interação com o usuário.
+Para rodar a aplicação em sua máquina local, siga os passos abaixo:
 
-2. **`gerador_problema.py`**  
-   Responsável por criar a matriz de distâncias, seja fixa ou aleatória, e gerar a solução inicial, respeitando a regra de roteamento fixo quando exigido.
+1. Certifique-se de ter o Python instalado (versão 3.8 ou superior).
 
-3. **`avalia_sucessor.py`**  
-   Contém a função de avaliação de custo da rota e o motor de geração de vizinhos, também chamado de sucessor, garantindo a integridade dos pontos de origem e destino, que representam a Cozinha Piloto.
+2. Abra o terminal na pasta do projeto e instale as bibliotecas utilizadas:
 
-4. **`logica.py`**  
-   Contém a implementação matemática pura dos algoritmos heurísticos de busca:
-   - Subida de Encosta Clássica;
-   - Subida de Encosta com Tentativas;
-   - Têmpera Simulada.
+   # Instala o framework da interface web, biblioteca matemática e de tabelas
 
-5. **`analise_comparativa.py`**  
-   Motor de automação que executa múltiplas baterias de testes com os algoritmos e gera os dados da **Tabela 1**, calculando a porcentagem de ganho de cada método.
+   pip install streamlit numpy pandas
 
----
+3. Após as instalações, inicie a aplicação com o comando:
+   streamlit run app.py
 
-## Como Rodar a Aplicação
+4. O sistema abrirá automaticamente uma aba no seu navegador padrão (geralmente no endereço http://localhost:8501).
 
-Para executar a aplicação em sua máquina local, siga os passos abaixo.
+Guia de operação da interface:
+O sistema possui uma navegação dividida em três seções: "Métodos Básicos", "Algoritmos Genéticos" e "Sobre".
 
-### 1. Verifique a instalação do Python
+ABA 1: MÉTODOS BÁSICOS
+A) CONFIGURAÇÃO DO PROBLEMA: - Escolha entre "FIXO" ou "ALEATÓRIO". - No modo "FIXO", o sistema utiliza a matriz real da Cozinha Piloto. - Clique no botão "Gerar Problema" para criar a matriz de distâncias.
 
-Certifique-se de ter o **Python 3.8 ou superior** instalado em sua máquina.
+B) SOLUÇÃO INICIAL: - Clique no botão "Solução Inicial" para definir o ponto de partida e o custo inicial da rota base.
 
-### 2. Instale as bibliotecas necessárias
+C) EXECUÇÃO DE ALGORITMOS: - Selecione o método desejado (Subida de Encosta, Subida de Encosta com Tentativas ou Têmpera Simulada). - Preencha os hiperparâmetros exigidos que aparecerão em tela (como TMAX ou Temperatura TI/TF). - Clique em "Executar" para ver o trajeto final e o novo custo reduzido.
 
-Abra o terminal na pasta do projeto e instale as bibliotecas individualmente:
+D) ANÁLISE COMPARATIVA (TABELA 1): - Na seleção de método, escolha a opção "Análise Comparativa". - Clique em "Executar". O sistema calculará o Ganho percentual médio das baterias em todas as abordagens exigidas e exibirá em formato de tabela.
 
-```bash
-# Instala o framework da interface web
-pip install streamlit
-
-# Instala a biblioteca para cálculos matemáticos e matrizes
-pip install numpy
-
-# Instala a biblioteca para geração e manipulação de tabelas
-pip install pandas
-```
-
-### 3. Execute a aplicação
-
-Após as instalações, inicie a aplicação com o comando:
-
-```bash
-streamlit run app.py
-```
-
-### 4. Acesse no navegador
-
-O sistema abrirá automaticamente uma aba no navegador padrão.
-
-Caso isso não aconteça, acesse manualmente:
-
-```txt
-http://localhost:8501
-```
-
----
-
-## Guia de Operação da Interface
-
-Para realizar um teste completo, siga a sequência abaixo.
-
-### A) Configuração do Problema
-
-1. No menu lateral, escolha entre **FIXO** ou **ALEATÓRIO**.
-2. No modo **FIXO**, o sistema utiliza a matriz real da Cozinha Piloto.
-3. No modo **ALEATÓRIO**, é possível definir a quantidade de escolas para o teste.
-4. Clique no botão **GERAR PROBLEMA** para criar a matriz de distâncias.
-
-### B) Solução Inicial
-
-1. Clique no botão **SOLUÇÃO INICIAL** para definir o ponto de partida.
-2. No modo **FIXO**, a solução inicial é constante, conforme exigido pela atividade.
-3. No modo **ALEATÓRIO**, a solução inicial é gerada de forma randômica.
-
-### C) Execução de Algoritmos
-
-1. No campo **Selecione o Método**, escolha o algoritmo desejado:
-   - **SE** — Subida de Encosta;
-   - **SET** — Subida de Encosta com Tentativas;
-   - **TE** — Têmpera Simulada.
-
-2. Caso escolha **SET** ou **TE**, campos adicionais para parâmetros, como **TMAX** ou **Temperatura**, aparecerão automaticamente.
-
-3. Clique em **EXECUTAR MÉTODO** para visualizar:
-   - A melhor rota encontrada;
-   - A distância final;
-   - O desempenho do método selecionado.
-
-### D) Análise Comparativa — Tabela 1
-
-1. Selecione a opção **Análise Comparativa**.
-2. Clique em **EXECUTAR MÉTODO**.
-3. O sistema executará automaticamente todas as **11 configurações exigidas na atividade**.
-4. O resultado será exibido em uma tabela comparativa com o cálculo do **ganho percentual** de cada método.
-
----
-
-## Estrutura Geral do Projeto
-
-```txt
-projeto/
-│
-├── app.py
-├── gerador_problema.py
-├── avalia_sucessor.py
-├── logica.py
-└── analise_comparativa.py
-```
-
----
-
-## Tecnologias Utilizadas
-
-- **Python 3.8+**
-- **Streamlit**
-- **NumPy**
-- **Pandas**
-
----
-
-## Objetivo
-
-O objetivo do projeto é aplicar algoritmos heurísticos para resolver uma variação do problema do **Caixeiro Viajante**, buscando otimizar rotas de entrega de alimentos realizadas pela Cozinha Piloto de Cachoeira Paulista.
+ABA 2: ALGORITMOS GENÉTICOS
+E) EVOLUÇÃO DE POPULAÇÃO: - É obrigatório já ter gerado a matriz de problemas na aba de Métodos Básicos. - Defina os hiperparâmetros da evolução:
+_ Tamanho da População (TP)
+_ Número de Gerações (NG)
+_ Taxa de Cruzamento (TC)
+_ Taxa de Mutação (TM) - Clique em "Executar AG". O sistema aplicará os processos biológicos de cruzamento e mutação, retornando o melhor custo da última geração, além da sequência numérica e os locais percorridos.
