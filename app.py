@@ -275,12 +275,28 @@ if menu == "Métodos Básicos":
 # =========================================================
 elif menu == "Algoritmos Genéticos":
     st.markdown("<div class='m3-headline'>Algoritmos Genéticos</div>", unsafe_allow_html=True)
-    st.markdown("<div class='m3-body' style='margin-bottom: 2rem;'>Evolução de uma população de rotas utilizando seleção por roleta, cruzamento de ordem (OX) e mutação por troca.</div>", unsafe_allow_html=True)
+    st.markdown("<div class='m3-body' style='margin-bottom: 2rem;'>Evolução de uma população de rotas utilizando seleção por roleta, cruzamento de ordem (OX) e mutação por troca. <strong>Módulo exclusivo para Problemas Aleatórios.</strong></div>", unsafe_allow_html=True)
 
-    # Verifica se o usuário já gerou a matriz de escolas na primeira aba
-    if st.session_state.matriz is None:
-        st.warning("É necessário ir na aba 'Métodos Básicos' e clicar em 'Gerar Problema' primeiro.")
+    # --- NOVO BLOCO: GERADOR DE PROBLEMA ALEATÓRIO EXCLUSIVO DO AG ---
+    st.markdown("<div class='m3-title'>Geração do Problema</div>", unsafe_allow_html=True)
+    
+    col_tam_ag, col_btn_ag = st.columns(2)
+    with col_tam_ag:
+        tamanho_ag = st.number_input("Quantidade de Escolas (Aleatório)", min_value=4, value=50, step=1, help="Tamanho da matriz (N) para o Algoritmo Genético.")
+        
+    with col_btn_ag:
+        st.markdown("<br>", unsafe_allow_html=True) # Alinhamento visual com o input
+        if st.button("Gerar Problema Aleatório", key="btn_gerar_ag"):
+            escolas_ag, matriz_ag = gerar_problema_aleatorio(tamanho_ag)
+            st.session_state.matriz_ag = matriz_ag
+            st.session_state.escolas_ag = escolas_ag
+            st.success(f"Matriz de distâncias para {tamanho_ag} cidades gerada com sucesso!")
+
+    # --- VERIFICA SE O PROBLEMA ALEATÓRIO FOI GERADO ---
+    if st.session_state.get("matriz_ag") is None:
+        st.warning("Clique no botão acima para gerar um problema aleatório antes de configurar o Algoritmo Genético.")
     else:
+        st.markdown("<hr style='border-color: #49454F; margin: 2rem 0;'>", unsafe_allow_html=True)
         st.markdown("<div class='m3-title'>Hiperparâmetros do Algoritmo Genético</div>", unsafe_allow_html=True)
         
         # Cria duas colunas para organizar os sliders e inputs numéricos
@@ -292,28 +308,28 @@ elif menu == "Algoritmos Genéticos":
         
         with col_params2:
             tc = st.slider("Taxa de Cruzamento (TC)", min_value=0.0, max_value=1.0, value=0.8, step=0.05, help="Probabilidade de dois pais misturarem suas rotas.")
-            tm = st.slider("Taxa de Mutação (TM)", min_value=0.0, max_value=1.0, value=0.05, step=0.01, help="Probabilidade de uma rota filha inverter posições aleatoriamente.")
+            tm = st.slider("Taxa de Mutação (TM)", min_value=0.0, max_value=1.0, value=0.2, step=0.01, help="Probabilidade de uma rota filha inverter posições aleatoriamente.")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
         # Botão de execução
         if st.button("Executar AG", type="primary"):
             with st.spinner("Evoluindo a população de rotas..."):
-                escolas_qtd = len(st.session_state.escolas)
-                matriz = st.session_state.matriz
+                escolas_qtd = len(st.session_state.escolas_ag)
+                matriz = st.session_state.matriz_ag
                 
                 # Executa o algoritmo genético do arquivo ag.py
                 melhor_rota, melhor_custo = algoritmo_genetico(escolas_qtd, matriz, tp, ng, tc, tm)
             
-            # Exibe o resultado final na tela
+            # Exibe o resultado final na tela com Nomes e Sequência Numérica
             st.markdown("<div class='m3-title' style='margin-top: 1.5rem;'>Resultado da Evolução</div>", unsafe_allow_html=True)
             col_res1, col_res2 = st.columns([1, 3])
             
             col_res1.metric("Melhor Custo Encontrado", f"{melhor_custo:.2f}")
             
             rota_numerica = " ➔ ".join([str(i) for i in melhor_rota])
-            rota_nomes = nomes_da_rota(melhor_rota, st.session_state.escolas)
-
+            rota_nomes = nomes_da_rota(melhor_rota, st.session_state.escolas_ag)
+            
             html_rota = f"""
             <div class='m3-route-box' style='margin-top: 0;'>
                 <span style='color: #D0BCFF; font-weight: bold;'>Sequência Numérica:</span><br>
@@ -323,7 +339,6 @@ elif menu == "Algoritmos Genéticos":
                 {rota_nomes}
             </div>
             """
-
             col_res2.markdown(html_rota, unsafe_allow_html=True)
 
 # =========================================================
